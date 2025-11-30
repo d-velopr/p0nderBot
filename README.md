@@ -11,4 +11,4 @@ PHONE=1234569012
 # Run Script
 python3 run.py
 
-# Works Good But Cannot Bypass Stripes Anti-Bot Radar (Line 170-196)
+## Works Good But Cannot Bypass Stripes Anti-Bot Radar (Line 170-196)
