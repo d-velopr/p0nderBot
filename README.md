@@ -1,5 +1,10 @@
 ## Works Good But Cannot Bypass Stripes Anti-Bot Radar (Line 170-196)
 
+# Requirements
+geckoWebDriver
+Selenium
+.env file
+
 # Create a .env file
 EMAIL=your_email@example.com
 FULL_NAME=John Doe
