@@ -166,7 +166,9 @@ try:
                     except:
                         print("ℹ️ Phone field not visible or not required")
                     
-                    # Clicking Card Option - Payment Method 
+                    # ! (* Anti-Bot Detection Here! *) ! 
+
+                    # Choose Payment Method - Click "Card" Option
                     try:
                         print("🔄 Checking payment method selection...")
 
@@ -194,6 +196,8 @@ try:
                     except Exception as e:
                         print(f"❌ Card selection failed: {e}")
                     time.sleep(3)
+
+                    # ! (* Anti-Bot Detection Here! *) !
                     
                     # 10. Click Pay Button
                     pay_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")))
