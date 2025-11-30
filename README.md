@@ -1,8 +1,8 @@
 ## Works Good But Cannot Bypass Stripes Anti-Bot Radar (Line 170-196)
 
 # Requirements
-geckoWebDriver
-Selenium
+geckoWebDriver,
+Selenium, &
 .env file
 
 # Create a .env file
