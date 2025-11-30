@@ -1,4 +1,6 @@
-# Create a .env file 
+## Works Good But Cannot Bypass Stripes Anti-Bot Radar (Line 170-196)
+
+# Create a .env file
 EMAIL=your_email@example.com
 FULL_NAME=John Doe
 ADDRESS=123 Main Street
@@ -10,5 +12,3 @@ PHONE=1234569012
 
 # Run Script
 python3 run.py
-
-## Works Good But Cannot Bypass Stripes Anti-Bot Radar (Line 170-196)
