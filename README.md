@@ -1,8 +1,6 @@
-## Works Good But Cannot Bypass Stripes Anti-Bot Radar (Line 170-196)
-
 # Requirements
-geckoWebDriver,
-Selenium, &
+pip3 geckoWebDriver,
+pip3 selenium, &
 .env file
 
 # Create a .env file
@@ -14,6 +12,9 @@ STATE=NY
 ZIP_CODE=10001
 COUNTRY=United States
 PHONE=1234569012
+CARD_NUMBER=4242424242424242
+CARD_EXPIRY=1230
+CARD_CVC=123
 
 # Run Script
 python3 run.py

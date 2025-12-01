@@ -21,11 +21,14 @@ CONFIG = {
     'state': os.getenv('STATE'),
     'zip_code': os.getenv('ZIP_CODE'),
     'country': os.getenv('COUNTRY'),
-    'phone': os.getenv('PHONE')
+    'phone': os.getenv('PHONE'),
+    'card_number': os.getenv('CARD_NUMBER'),
+    'card_expiry': os.getenv('CARD_EXPIRY'), 
+    'card_cvc': os.getenv('CARD_CVC')
 }
 
 # Validate that all required variables are present
-required_vars = ['EMAIL', 'FULL_NAME', 'ADDRESS', 'CITY', 'STATE', 'ZIP_CODE']
+required_vars = ['EMAIL', 'FULL_NAME', 'ADDRESS', 'CITY', 'STATE', 'ZIP_CODE', 'CARD_NUMBER', 'CARD_EXPIRY', 'CARD_CVC']
 missing_vars = [var for var in required_vars if not os.getenv(var)]
 
 if missing_vars:
@@ -166,9 +169,7 @@ try:
                     except:
                         print("ℹ️ Phone field not visible or not required")
                     
-                    # ! (* Anti-Bot Detection Here! *) ! 
-
-                    # Choose Payment Method - Click "Card" Option
+                    # 10. Choose Payment Method - Click "Card" Option & Fill Out Card Info
                     try:
                         print("🔄 Checking payment method selection...")
 
@@ -180,30 +181,74 @@ try:
                         else:
                             print("🔄 Selecting card payment method...")
 
-                            # Just set it via JavaScript without any container clicks
-                            browser.execute_script("""
-                                arguments[0].checked = true;
-                                arguments[0].setAttribute('aria-checked', 'true');
-                                arguments[0].dispatchEvent(new Event('change', { bubbles: true }));
-                            """, card_radio)
+                            # Select Card Payment 
+                            try:
+                                accordion_item = browser.find_element(By.CSS_SELECTOR, "[data-testid='card-accordion-item']")
+                                actions = ActionChains(browser)
+                                actions.move_to_element(accordion_item).click().perform()
+                                print("✅ Clicked entire card accordion item as fallback")
+                            except Exception as fallback_error:
+                                print(f"❌ Ultimate fallback also failed: {fallback_error}")
                             print("✅ Card payment method selected")
 
                             # Verify
                             time.sleep(1)
                             is_checked = browser.execute_script("return arguments[0].checked", card_radio)
                             print(f"✅ Verified: {is_checked}")
-    
+
+                        # === NEW: FILL CARD INFORMATION HERE ===
+                        print("🔄 Filling card information...")
+
+                        # Wait for card form to be visible
+                        time.sleep(2)
+
+                        # 1. Fill Card Number
+                        card_number_field = wait.until(EC.element_to_be_clickable((By.ID, "cardNumber")))
+                        card_number_field.clear()
+                        # Type slowly like a human
+                        for char in CONFIG['card_number']:
+                            card_number_field.send_keys(char)
+                            time.sleep(0.05)
+                        print("✅ Card number filled")
+                        time.sleep(1)
+
+                        # 2. Fill Expiration Date (MM / YY)
+                        expiry_field = wait.until(EC.element_to_be_clickable((By.ID, "cardExpiry")))
+                        expiry_field.clear()
+                        for char in CONFIG['card_expiry']:
+                            expiry_field.send_keys(char)
+                            time.sleep(0.05)
+                        print("✅ Expiry date filled")
+                        time.sleep(1)
+
+                        # 3. Fill CVC
+                        cvc_field = wait.until(EC.element_to_be_clickable((By.ID, "cardCvc")))
+                        cvc_field.clear()
+                        for char in CONFIG['card_cvc']:
+                            cvc_field.send_keys(char)
+                            time.sleep(0.05)
+                        print("✅ CVC filled")
+                        time.sleep(2)
+
+                        # Optional: Verify the billing info checkbox is checked (it should be by default)
+                        try:
+                            billing_checkbox = browser.find_element(By.ID, "cardUseShippingAsBilling")
+                            if billing_checkbox.is_selected():
+                                print("✅ Billing info same as shipping is checked")
+                        except:
+                            print("ℹ️ Billing checkbox not found or not checked")
+
                     except Exception as e:
-                        print(f"❌ Card selection failed: {e}")
+                        print(f"❌ Card selection/filling failed: {e}")
+
                     time.sleep(3)
 
-                    # ! (* Anti-Bot Detection Here! *) !
-                    
-                    # 10. Click Pay Button
+                    # 11. Click Pay Button
                     pay_button = wait.until(EC.element_to_be_clickable((By.XPATH, "//button[@type='submit']")))
                     pay_button.click()
                     print("✅ Pay button clicked!")
                     print("🎉 Checkout process completed!")
+
                     
                 except Exception as form_error:
                     print(f"❌ Error filling form: {form_error}")
@@ -221,7 +266,7 @@ except Exception as e:
     import traceback
     traceback.print_exc()
 
-# Keep browser open for a bit to see result
+# 12. Keep browser open for a bit to see result
 print("Waiting 10 seconds before closing...")
 time.sleep(10)
 browser.quit()
